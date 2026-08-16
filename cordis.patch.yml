@@ -1,0 +1,9 @@
+# dsh-evomem bundle patch: mounts the evomem memory tools
+# (memory_remember / memory_recall / memory_forget) and pins the backend MCP
+# server URL. The namespace is derived from the session's workspace folder at
+# call time, so the model never sees or chooses a namespace.
+- insert:
+    - id: dsh-evomem
+      name: dsh-evomem
+      config:
+        url: http://raspberrypi.local:8090/mcp

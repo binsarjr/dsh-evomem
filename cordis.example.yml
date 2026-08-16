@@ -1,0 +1,8 @@
+# Example composition row for DeepSeek Harness.
+# The bundle patch (cordis.patch.yml) already installs the plugin row when the
+# bundle is added via `dsh plugin add github:binsarjr/dsh-evomem`.
+# This file shows the equivalent explicit row for hand-rolled compositions.
+- id: dsh-evomem
+  name: dsh-evomem
+  config:
+    url: http://raspberrypi.local:8090/mcp

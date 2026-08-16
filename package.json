@@ -1,0 +1,42 @@
+{
+  "name": "dsh-evomem",
+  "version": "0.1.0",
+  "description": "evomem memory tools (memory_remember / memory_recall / memory_forget) for DeepSeek Harness (DSH), auto-routed to a per-workspace namespace.",
+  "type": "module",
+  "license": "MIT",
+  "author": "binsarjr",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/binsarjr/dsh-evomem.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "main": "./src/dsh-plugin.mjs",
+  "exports": {
+    ".": "./src/dsh-plugin.mjs",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./package.json": "./package.json"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "files": [
+    "src",
+    "cordis.patch.yml",
+    "cordis.example.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "cordis",
+    "plugin",
+    "evomem",
+    "memory",
+    "knowledge-graph"
+  ]
+}
