@@ -1,11 +1,11 @@
 /**
  * dsh-evomem — out-of-tree DeepSeek Harness plugin.
  *
- * Registers three consolidated memory tools (memory_remember, memory_recall,
- * memory_forget) and routes every call to the namespace derived from the
- * CURRENT session's workspace directory (`SessionHeader.cwd`). One
- * evomem-mcp-rs server serves many workspaces; the model never sees or chooses
- * a namespace.
+ * Registers three memory tools (memory_remember, memory_recall, memory_forget)
+ * as a thin pass-through to evomem-mcp-rs, and routes every call to the
+ * namespace derived from the CURRENT session's workspace directory
+ * (`SessionHeader.cwd`). One evomem-mcp-rs server serves many workspaces; the
+ * model never sees or chooses a namespace.
  *
  * Pure ESM, no runtime dependencies beyond Node 22 built-ins (global `fetch`,
  * `node:path`) and the services the harness injects via `inject`.
@@ -169,7 +169,7 @@ async function runTool(url, serverTool, args, exec) {
   return canonicalValue(result)
 }
 
-/** The model-facing tool surface (hardcoded; the server's full tool set stays internal). */
+/** The model-facing tool surface (thin pass-through to the server's three tools). */
 function toolDefinitions(url) {
   return [
     {
@@ -189,7 +189,7 @@ function toolDefinitions(url) {
         required: ['text'],
       },
       output: { schema: {}, render: renderJson },
-      execute: (args, exec) => runTool(url, 'memory_capture', args, exec),
+      execute: (args, exec) => runTool(url, 'memory_remember', args, exec),
     },
     {
       name: 'memory_recall',
@@ -209,16 +209,7 @@ function toolDefinitions(url) {
         required: ['query'],
       },
       output: { schema: {}, render: renderJson },
-      execute: (args, exec) => {
-        const mode = args.mode ?? 'search'
-        if (mode === 'graph') {
-          return runTool(url, 'memory_graph', { start: args.query, edge: args.edge, hops: args.hops }, exec)
-        }
-        if (mode === 'think') {
-          return runTool(url, 'memory_think', { query: args.query, mode: 'balanced' }, exec)
-        }
-        return runTool(url, 'memory_search', { query: args.query }, exec)
-      },
+      execute: (args, exec) => runTool(url, 'memory_recall', args, exec),
     },
     {
       name: 'memory_forget',

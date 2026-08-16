@@ -10,30 +10,30 @@ switches the memory, and there is zero per-workspace configuration.
 
 ## How it works
 
-1. The plugin hardcodes three consolidated tools (`memory_remember`,
-   `memory_recall`, `memory_forget`) that map onto the server's finer-grained
-   tools — the model sees a small, evonic-style surface.
+1. The plugin mirrors the server's lean three-tool surface (`memory_remember`,
+   `memory_recall`, `memory_forget`) one-to-one — see `../evomem-mcp-rs`.
 2. On every tool call it reads the session's workspace from
    `agent.session.header.cwd` and computes `namespace = slug(basename(cwd))`.
 3. It calls the server with that namespace in the `X-Evomem-Namespace` header,
    keeping one MCP session per namespace.
 
+That is the whole point of the plugin: the server is namespace-agnostic (the
+namespace rides an HTTP header), and this plugin supplies that header from the
+session's workspace — so switching workspace switches memory with zero
+per-workspace configuration.
+
 ## Exposed tools
 
-Only these three are visible to the model:
+Only these three are visible to the model (a one-to-one pass-through to the
+server):
 
-- `memory_remember` (`text*`, `title?`, `tags?`) → server `memory_capture`
-- `memory_recall` (`query*`, `mode?`, `edge?`, `hops?`) → server
-  `memory_search` / `memory_think` / `memory_graph` by `mode`
-- `memory_forget` (`slug*`) → server `memory_forget`
+- `memory_remember` (`text*`, `title?`, `tags?`)
+- `memory_recall` (`query*`, `mode?`, `edge?`, `hops?`)
+- `memory_forget` (`slug*`)
 
 `mode` on `memory_recall` is `search` (default) | `think` | `graph`. `edge`/`hops`
-apply only to `graph` mode (where `query` is the start entity).
-
-Hidden on purpose: `memory_get_doc`, `memory_list_namespaces` (leaks other
-namespaces), `memory_init` (auto-initialized by the server), `memory_sync`
-(`capture` already auto-indexes), and `memory_stats` (admin-only). No tool takes
-a `namespace` argument — the namespace always follows the session workspace.
+apply only to `graph` mode (where `query` is the start entity). No tool takes a
+`namespace` argument — the namespace always follows the session workspace.
 
 ## Model guidance
 
