@@ -65,14 +65,15 @@ dsh web
 
 ## Config
 
-`cordis.patch.yml` carries the only setting:
+The evomem MCP server URL comes from the `EVOMEM_MCP_URL` environment variable
+(no URL is hardcoded anywhere in this repo):
 
-```yaml
-config:
-  url: http://raspberrypi.local:8090/mcp
+```sh
+export EVOMEM_MCP_URL=http://your-server:8090/mcp
 ```
 
-`url` is the evomem MCP Streamable HTTP endpoint. The namespace is never a
+The plugin reads `config.url` first, then `EVOMEM_MCP_URL`; if neither is set it
+logs an error and leaves the memory tools disabled. The namespace is never a
 config value — it always follows the session workspace.
 
 ## Namespace rules

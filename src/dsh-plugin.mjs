@@ -15,7 +15,6 @@ import { basename } from 'node:path'
 export const name = 'dsh-evomem'
 export const inject = ['tools', 'systemPrompt']
 
-const DEFAULT_URL = 'http://raspberrypi.local:8090/mcp'
 const PROTOCOL_VERSION = '2025-11-25'
 
 /** Persistent reminder: how to structure memory for graph + search quality. */
@@ -240,7 +239,13 @@ function toolDefinitions(url) {
 }
 
 export async function apply(ctx, config) {
-  const url = config?.url || DEFAULT_URL
+  const url = config?.url || process.env.EVOMEM_MCP_URL
+  if (!url) {
+    ctx.logger?.error?.(
+      'dsh-evomem: EVOMEM_MCP_URL env var (or config.url) is required; memory tools disabled'
+    )
+    return
+  }
 
   // Persistent guidance so the model structures memory correctly (wikilinks
   // wire the graph; tags categorize notes; recall modes cover retrieval).

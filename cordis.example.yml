@@ -2,7 +2,11 @@
 # The bundle patch (cordis.patch.yml) already installs the plugin row when the
 # bundle is added via `dsh plugin add github:binsarjr/dsh-evomem`.
 # This file shows the equivalent explicit row for hand-rolled compositions.
+#
+# The MCP server URL comes from the EVOMEM_MCP_URL env var (nothing is
+# hardcoded). Set it in your shell/profile, e.g.:
+#   export EVOMEM_MCP_URL=http://your-server:8090/mcp
 - id: dsh-evomem
   name: dsh-evomem
   config:
-    url: http://raspberrypi.local:8090/mcp
+    url: !!js process.env.EVOMEM_MCP_URL
