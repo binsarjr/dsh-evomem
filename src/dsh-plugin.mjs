@@ -17,6 +17,10 @@ export const inject = ['tools', 'systemPrompt']
 
 const PROTOCOL_VERSION = '2025-11-25'
 
+/** Author (team member) folder name, from env. Unset => server defaults to
+ *  "inbox" (single-user). Set once per person in their dsh settings. */
+const AUTHOR = process.env.EVOMEM_AUTHOR?.trim() || ''
+
 /** Persistent reminder: how to structure memory for graph + search quality. */
 const MEMORY_GUIDANCE =
   'Memory (evomem): capture durable facts with memory_remember, recall them ' +
@@ -67,12 +71,14 @@ function parseSse(body) {
 const sessions = new Map()
 
 function baseHeaders(namespace) {
-  return {
+  const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json, text/event-stream',
     'MCP-Protocol-Version': PROTOCOL_VERSION,
     'X-Evomem-Namespace': namespace,
   }
+  if (AUTHOR) headers['X-Evomem-Author'] = AUTHOR
+  return headers
 }
 
 async function rpc(url, namespace, sessionId, method, params) {

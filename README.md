@@ -76,6 +76,22 @@ The plugin reads `config.url` first, then `EVOMEM_MCP_URL`; if neither is set it
 logs an error and leaves the memory tools disabled. The namespace is never a
 config value — it always follows the session workspace.
 
+## Team (multi-author) mode
+
+Set `EVOMEM_AUTHOR` to pin your `memory_remember`/`memory_forget` writes to your
+own folder inside the shared workspace namespace:
+
+```sh
+export EVOMEM_AUTHOR=binsar
+```
+
+When set, the plugin sends it as the `X-Evomem-Author` header (same pattern as
+the namespace header). `memory_recall` still searches the whole namespace, so a
+team can share one workspace while each member's writes stay in their own
+folder. Leave it unset for the single-user default (`inbox`). The server
+lowercases and validates the name (`a-z0-9_-`); `test` and `attachments` are
+reserved and rejected.
+
 ## Namespace rules
 
 The namespace is the workspace folder name lowercased with any character

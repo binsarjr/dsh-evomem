@@ -6,6 +6,9 @@
 # The MCP server URL comes from the EVOMEM_MCP_URL env var (nothing is
 # hardcoded). Set it in your shell/profile, e.g.:
 #   export EVOMEM_MCP_URL=http://your-server:8090/mcp
+# Optionally set your team folder (default: inbox) so several people can share
+# one namespace while each writes to their own folder:
+#   export EVOMEM_AUTHOR=binsar
 - id: dsh-evomem
   name: dsh-evomem
   config:
